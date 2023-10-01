@@ -56,7 +56,7 @@ weak div{
     <div class="wrapper">
         {% for poll in polls %}
         
-        {% comment %} {% if poll.creator.username == user.username %} {% endcomment %}
+        {% if poll.creator.username == user.username %}
             {% if polls %}
                 <div class="card-body pollContent" style="min-width: 400px; overflow: wrap;">
                     <h5 class="card-title">{{poll.question}} </h5>
@@ -75,9 +75,9 @@ weak div{
                     <div name="answer4" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option4}}</div>
                     <div name="answer5" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option5}}</div>
                 </div>
-            {% comment %} {% else %} {% endcomment %}
+            {% else %}
                 <h1 style="align-text:center;">Login to see your polls.</h1> 
-            {% comment %} {% endif %} {% endcomment %}
+            {% endif %}
             
             {% endif %}
             {% endfor %}
