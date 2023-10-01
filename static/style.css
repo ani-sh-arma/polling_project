@@ -1,0 +1,28 @@
+.errorDialogue {
+  background-color: rgba(190, 60, 60, 0.86);
+  color: black;
+  font-weight: 500;
+  height: 100px;
+  width: 300px;
+  border-radius: 1rem;
+  padding: 5px 10px;
+  position: absolute;
+  top: 50px;
+  right: 50px;
+}
+#closeError {
+  width: 30px;
+  float: right;
+  font-weight: 600;
+  font-size: larger;
+  color: rgb(61, 60, 60);
+  text-align: center;
+}
+#closeError:hover {
+  font-weight: bold;
+  background-color: grey;
+  color: black;
+  cursor: pointer;
+}
+
+

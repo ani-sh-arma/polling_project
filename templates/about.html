@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    strong{
+        height:100%;
+        width:100%;
+        display:grid;
+        place-items:center;
+    }
+    strong h1{
+        color:black;
+        padding:100px 0;
+    }
+    strong h5{
+        min-width:300px;
+        max-width:600px;
+        text-align:justify;
+    }
+</style>
+{% endblock style %}
+{% block body %}
+<strong>
+    <h1>
+        This web app is created by Anish Sharma.
+    </h1>
+    <h5>
+        The purpose of this web app is for people to learn about the best things around the world and unbiasly vote for something that deserves to be well known as a majority.
+    </h5>
+</strong>
+{% endblock body %}

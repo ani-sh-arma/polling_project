@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+  .parent{
+    height:fit-content;
+    width:98vw;
+    display:grid;
+    place-items:center;
+  }
+.wrapper{
+  padding-top: 20px;
+  margin-bottom:50px;
+  width: 80vw;
+  display: grid;
+  gap:60px ;
+  padding-left:50px;
+  grid-template-columns:1fr 1fr;
+  /* grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); */
+}
+weak{
+  font-size: 14px;
+  color:grey;
+}
+weak div{
+  float:right;
+  padding-right:20px;
+}
+.pollContent{
+  min-width:300px;
+  width:500px;
+  border:1px solid grey;
+  border-radius:1rem;
+}
+
+.options{
+  height: 40px;
+  padding: 5px 0px;
+  border: 1px solid black;
+  margin-bottom:5px;
+  border-radius:5px;
+}
+
+.options:hover{
+  background-color: grey;
+}
+</style>
+{% endblock style %}
+{% block body %}
+
+
+    <div class="wrapper">
+        {% for poll in polls %}
+        
+        {% comment %} {% if poll.creator.username == user.username %} {% endcomment %}
+            {% if polls %}
+                <div class="card-body pollContent" style="min-width: 400px; overflow: wrap;">
+                    <h5 class="card-title">{{poll.question}} </h5>
+                    
+                    <a href="/delete/{{poll.id}}" class="btn btn-danger" style="float: right;">Delete</a>
+                    <a href="/update/{{poll.id}}" class="btn btn-primary" style="float: right;">Update</a>
+
+                    <weak> Created by : {{poll.creator}} 
+                        <div>
+                            Date : {{poll.date}}
+                        </div>
+                    </weak><br><br>
+                    <div name="answer1" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option1}}</div>
+                    <div name="answer2" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option2}}</div>
+                    <div name="answer3" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option3}}</div>
+                    <div name="answer4" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option4}}</div>
+                    <div name="answer5" class="options">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{poll.option5}}</div>
+                </div>
+            {% comment %} {% else %} {% endcomment %}
+                <h1 style="align-text:center;">Login to see your polls.</h1> 
+            {% comment %} {% endif %} {% endcomment %}
+            
+            {% endif %}
+            {% endfor %}
+
+            
+        </div>
+
+        
+{% endblock body %}
