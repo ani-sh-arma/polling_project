@@ -4,6 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    text-decoration: none;
   }
   .parent {
     height: fit-content;
@@ -41,10 +42,12 @@
     border: 1px solid black;
     margin-bottom: 5px;
     border-radius: 5px;
+    color: black;
+    text-decoration: none;
   }
 
   .options:hover {
-    background-color: grey;
+    background-color: cyan;
   }
 </style>
 {% endblock style %} 
@@ -81,9 +84,11 @@
                     <div>Date : {{poll.pub_date}}</div> </weak
                   ><br /><br />
                   {% for choice in poll.choice_set.all %}
-                  <div name="answer1" class="options vote-button">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}}
-                  </div>
+                  <a href="/vote/{{choice.id}}" style="text-decoration : none;">
+                    <div name="answer1" class="options vote-button" style="text-decoration : none;">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}} <p style="float:right; padding-right:20px;">{{choice.votes}}</p>
+                    </div>
+                  </a>
                   {% endfor %}
                 </div>
       

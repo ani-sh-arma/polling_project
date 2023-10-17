@@ -3,6 +3,9 @@ from .models import Poll,Choice
 # from .models import Vote
 
 
+
+class ChoiceAdmin(admin.ModelAdmin):
+    list_display = ['option_text', 'question', 'votes']
 class ChoiceInLine(admin.TabularInline):
     model = Choice
     extra = 1
@@ -18,7 +21,7 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ["question"]
 
 admin.site.register(Poll , QuestionAdmin)
-admin.site.register(Choice)
+admin.site.register(Choice,ChoiceAdmin)
 # admin.site.register(Vote)
 
 # Register your models here.

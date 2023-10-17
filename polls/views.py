@@ -148,37 +148,17 @@ def update(request,id):
 
 
 def vote(request,id):
-
     queryset = Choice.objects.get(id = id)
 
-    if request.method == "POST":
+    # return HttpResponse(request.method)
+
+
+    if request.method == "GET":
         queryset.votes += 1
         queryset.save()
         return redirect("/")
+        # return HttpResponse(queryset.votes)
 
     return redirect("/")
 
-    # if request.method == "POST" and request.is_ajax():
-    #     poll_id = request.POST.get("poll_id")
-    #     option = request.POST.get("option")
-        
-    #     poll = Poll.objects.get(id=poll_id)
-    #     vote = Vote.objects.get(question=poll)
-        
-    #     if option == "option1":
-    #         vote.Op1votes += 1
-    #     elif option == "option2":
-    #         vote.Op2votes += 1
-    #     elif option == "option3":
-    #         vote.Op3votes += 1
-    #     elif option == "option4":
-    #         vote.Op4votes += 1
-    #     elif option == "option5":
-    #         vote.Op5votes += 1
-        
-    #     vote.save()
-        
-    #     return JsonResponse({'success': True, 'vote_count': getattr(vote, option + 'votes')})
-    
-    # return JsonResponse({'success': False})
 # Create your views here.
