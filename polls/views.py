@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 
 # from django.views.generic import ListView,DetailView
-from .models import Poll,Choice,Vote
+from .models import Poll,Choice
+# from .models import Vote
 from .forms import addPoll
 
 user = User.objects.all()
@@ -16,14 +17,19 @@ user = User.objects.all()
 @login_required(login_url="login")
 def index(request):
     poll = Poll.objects.all()
-    vote = Vote.objects.all()
+    # vote = Vote.objects.all()
     choice = Choice.objects.all()
     if request.user.is_anonymous:
         return redirect("/login")
 
     if request.GET.get('search'):
         poll = poll.filter(question__icontains = request.GET.get('search') )
-    return render(request, "index.html",{"polls":poll,"choice":choice,"vote":vote })
+
+
+    if request.user.is_superuser:
+        return render(request, "adminHome.html",{"polls":poll,"choices":choice})
+    
+    return render(request, "index.html",{"polls":poll,"choices":choice,"vote":vote })
 
 
 
@@ -74,7 +80,7 @@ def register(request):
 
 def mypolls(request):
     poll = Poll.objects.all()
-    vote = Vote.objects.all()
+    # vote = Vote.objects.all()
     choice = Choice.objects.all()
     if request.user.is_anonymous:
         return redirect("/login")
@@ -97,6 +103,13 @@ def addpoll(request):
             poll = form.save(commit=False)
             poll.creator = request.user
             poll.save()
+
+            options_str = form.cleaned_data['options']
+            options_list = [option.strip() for option in options_str.split(",")]
+
+            for option_text in options_list:
+                Choice.objects.create(question=poll, option_text=option_text)
+
             return redirect("home")
     else:
         form = addPoll()
@@ -136,8 +149,12 @@ def update(request,id):
 
 def vote(request,id):
 
-    # a=Poll.objects.get(id = id)
-    queryset = Poll.objects.get(id = id)
+    queryset = Choice.objects.get(id = id)
+
+    if request.method == "POST":
+        queryset.votes += 1
+        queryset.save()
+        return redirect("/")
 
     return redirect("/")
 

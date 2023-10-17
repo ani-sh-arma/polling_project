@@ -67,22 +67,19 @@
 <div class="addpoll">
     <h1>Add a new poll</h1>
     {% if context %}
-    <p>
-        {{context}}
-    </p>
+        <p>{{ context }}</p>
     {% endif %}
     <form method="POST">
         {% csrf_token %}
-
         {{ form.as_p }}
-
+        {% comment %} <div>
+            <label for="{{ form.options.id_for_label }}">Options:</label>
+            {{ form.options }}
+        </div> {% endcomment %}
         <br>
-        <button class="btnBack" id="">
-            back
-        </button>
-        <button type="submit" id="btn">
-            submit
-        </button>
+        <button class="btnBack" id="">back</button>
+        <button type="submit" id="btn">submit</button>
     </form>
 </div>
+
 {% endblock body %}
