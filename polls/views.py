@@ -55,7 +55,6 @@ def register(request):
         try:
 
             new_user = User.objects.create_user(username, email, password)
-            # new_user = UserCreationForm(request.POST)
             new_user.first_name = fname
             new_user.last_name = lname
 
@@ -82,6 +81,9 @@ def mypolls(request):
     poll = Poll.objects.all()
     # vote = Vote.objects.all()
     choice = Choice.objects.all()
+
+    if request.GET.get('search'):
+        poll = poll.filter(question__icontains = request.GET.get('search') )
     if request.user.is_anonymous:
         return redirect("/login")
     
@@ -150,9 +152,6 @@ def update(request,id):
 def vote(request,id):
     queryset = Choice.objects.get(id = id)
 
-    # return HttpResponse(request.method)
-
-
     if request.method == "GET":
         queryset.votes += 1
         queryset.save()
@@ -160,5 +159,3 @@ def vote(request,id):
         # return HttpResponse(queryset.votes)
 
     return redirect("/")
-
-# Create your views here.
