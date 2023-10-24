@@ -156,6 +156,5 @@ def vote(request,id):
         queryset.votes += 1
         queryset.save()
         return redirect("/")
-        # return HttpResponse(queryset.votes)
 
     return redirect("/")
