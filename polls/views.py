@@ -40,9 +40,6 @@ def index(request):
 #     template_name = "index.html"
 
 
-def LogoutView(request):
-    logout(request)
-    return redirect("login")
 
 def register(request):
     if request.method == "POST":

@@ -42,9 +42,13 @@
               <li class="nav-item">
                 <a class="nav-link" href="/mypolls" tabindex="-1" aria-disabled="true">My Polls</a>
               </li>
-              <li class="nav-item" style="margin-right:200px;">
+              <li class="nav-item" >
                 <a class="nav-link" href="/addpoll" tabindex="-1" aria-disabled="true">New Poll</a>
               </li>
+              <li class="nav-item" style="margin-right:200px;">
+                {% block adminbtn %}{% endblock adminbtn %}
+              </li>
+
               <li class="nav-item">
                 {% block serach_bar %}{% endblock serach_bar %}
               </li>
@@ -54,11 +58,10 @@
               <h5>{{request.user}}</h5>
             </div>
 
-            {% block adminbtn %}{% endblock adminbtn %}
 
             <div class="logout">
                 <h5>
-                    <a href="/login">Logout</a>
+                    <a href="/logout">Logout</a>
                 </h5>
             </div>
           </div>

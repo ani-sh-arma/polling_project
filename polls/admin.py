@@ -6,6 +6,7 @@ from .models import Poll,Choice
 
 class ChoiceAdmin(admin.ModelAdmin):
     list_display = ['option_text', 'question', 'votes']
+    
 class ChoiceInLine(admin.TabularInline):
     model = Choice
     extra = 1

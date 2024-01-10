@@ -51,6 +51,7 @@
   }
 </style>
 {% endblock style %} 
+
 {% block serach_bar %}
 <div style="position:relative; width:400px;">
     <form action="">
@@ -69,30 +70,33 @@
     </form>
   </div>
 {% endblock serach_bar %}
+
+
 {% block body %}
+<section>
 
+  <div class="wrapper">
 
+    {% for poll in polls %}
+ 
+                 <div class="card-body pollContent poll" style="min-width: 400px; overflow: wrap" >
+                   <h5 class="card-title">{{poll.question}}</h5>
+                   <weak>
+                     Created by : {{poll.creator}}
+                     <div>Date : {{poll.pub_date}}</div> </weak
+                   ><br /><br />
+                   {% for choice in poll.choice_set.all %}
+                   <a href="/vote/{{choice.id}}" style="text-decoration : none;">
+                     <div name="answer1" class="options vote-button" style="text-decoration : none;">
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}} <p style="float:right; padding-right:20px;">{{choice.votes}}</p>
+                     </div>
+                   </a>
+                   {% endfor %}
+                 </div>
+       
+       {% endfor %} 
+ </div>
 
-<div class="wrapper">
-
-   {% for poll in polls %}
-
-                <div class="card-body pollContent poll" style="min-width: 400px; overflow: wrap" >
-                  <h5 class="card-title">{{poll.question}}</h5>
-                  <weak>
-                    Created by : {{poll.creator}}
-                    <div>Date : {{poll.pub_date}}</div> </weak
-                  ><br /><br />
-                  {% for choice in poll.choice_set.all %}
-                  <a href="/vote/{{choice.id}}" style="text-decoration : none;">
-                    <div name="answer1" class="options vote-button" style="text-decoration : none;">
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}} <p style="float:right; padding-right:20px;">{{choice.votes}}</p>
-                    </div>
-                  </a>
-                  {% endfor %}
-                </div>
-      
-      {% endfor %} 
-</div>
+</section>
 
 {% endblock body %}

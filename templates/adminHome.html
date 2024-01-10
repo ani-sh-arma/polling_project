@@ -1,11 +1,11 @@
 {% extends "index.html" %}
 
+
 {% block title %}Admin's Homepage{% endblock title %}
 
 {% block adminbtn %}
-<div class="" style="margin-right: 50px; color: white;">
-    <a href="/admin" class="nav-link btn btn-info text-dark">
+    {% comment %} <a href="/admin" class="nav-link btn ">
       admin
-    </a>
-</div>
+    </a> {% endcomment %}
+    <a class="nav-link" href="/admin" tabindex="-1" aria-disabled="true">Admin</a>
 {% endblock adminbtn %}
