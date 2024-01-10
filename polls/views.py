@@ -1,15 +1,13 @@
 from django.shortcuts import render, redirect, HttpResponse , get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, logout, login
 from django.http import JsonResponse
 
-# from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.db import IntegrityError
 
-# from django.views.generic import ListView,DetailView
-from .models import Poll,Choice
-# from .models import Vote
+from .models import Poll , Choice , Voted
+from django.db.models import F
 from .forms import addPoll
 
 user = User.objects.all()
@@ -17,8 +15,18 @@ user = User.objects.all()
 @login_required(login_url="login")
 def index(request):
     poll = Poll.objects.all()
-    # vote = Vote.objects.all()
     choice = Choice.objects.all()
+    voted = Voted.objects.all()
+
+
+    # voted_choice = []
+
+    # for user in voted.user:
+    #     if request.user == user:
+    #         if voted.voted == True:
+    #             voted_choice.append(voted.choice)
+
+
     if request.user.is_anonymous:
         return redirect("/login")
 
@@ -27,10 +35,11 @@ def index(request):
 
 
     if request.user.is_superuser:
-        return render(request, "adminHome.html",{"polls":poll,"choices":choice})
+        return render(request, "adminHome.html",{"polls":poll,"choices":choice , "voted":voted})
     
-    return render(request, "index.html",{"polls":poll,"choices":choice,"vote":vote })
 
+    
+    return render(request, "index.html",{"polls":poll,"choices":choice,"vote":vote , "voted":voted })
 
 
 
@@ -146,12 +155,42 @@ def update(request,id):
 
 
 
-def vote(request,id):
-    queryset = Choice.objects.get(id = id)
+# def vote(request,id):
+#     queryset = Choice.objects.get(id = id)
 
-    if request.method == "GET":
-        queryset.votes += 1
-        queryset.save()
-        return redirect("/")
+#     if request.method == "GET":
+#         queryset.votes += 1
+#         queryset.save()
+#         return redirect("/")
 
-    return redirect("/")
+#     return redirect("/")
+
+
+
+@require_POST
+@login_required
+def vote(request, id):
+
+    try:
+
+        choice = get_object_or_404(Choice, id=id)
+        poll = choice.question  # Get the associated poll
+
+        # Check if the user has already voted for this poll
+        if Voted.objects.filter(user=request.user, poll=poll).exists():
+            # User has already voted for this poll
+            return JsonResponse({'error': 'You have already voted for this poll.'})
+
+        # Record the user's vote in the Voted table
+        Voted.objects.create(user=request.user, poll=poll, choice=choice, voted=True)
+
+        # Update the votes count for the chosen option
+        choice.votes = int (choice.votes) + 1
+        choice.save()
+
+        updated_votes = choice.votes
+
+        return JsonResponse({'success': 'Vote recorded successfully.', 'votes': updated_votes})
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e) })

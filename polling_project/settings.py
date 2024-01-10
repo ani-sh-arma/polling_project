@@ -131,6 +131,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 APPEND_SLASH = True
 
+
+LOGIN_REDIRECT_URL = '/' 
+
 # Set session expiration to a desired time (in seconds)
 SESSION_COOKIE_AGE = 604800   # a week in seconds
 

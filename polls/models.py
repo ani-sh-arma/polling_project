@@ -32,17 +32,17 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.option_text
+    
 
+class Voted(models.Model):
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    voted = models.BooleanField(default=False)
 
-# class Vote(models.Model):
-#     question = models.ForeignKey(Poll,on_delete=models.CASCADE)
-#     Op1votes = models.IntegerField(default=0)
-#     Op2votes = models.IntegerField(default=0)
-#     Op3votes = models.IntegerField(default=0)
-#     Op4votes = models.IntegerField(default=0)
-#     Op5votes = models.IntegerField(default=0)
+    # obj = Choice()
 
-#     def __str__(self):
-#         return f"{self.question.question}"
-
-# Create your models here.
+    def __str__(self):
+        return self.choice.option_text
+    

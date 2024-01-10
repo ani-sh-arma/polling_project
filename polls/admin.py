@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import Poll,Choice
+from .models import Poll,Choice , Voted
 # from .models import Vote
 
 
 
 class ChoiceAdmin(admin.ModelAdmin):
     list_display = ['option_text', 'question', 'votes']
+
     
 class ChoiceInLine(admin.TabularInline):
     model = Choice
@@ -21,8 +22,12 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ["pub_date"]
     search_fields = ["question"]
 
+
+class VotedAdmin(admin.ModelAdmin):
+    list_display = ['user', 'poll' , 'choice', 'voted']
+
+
 admin.site.register(Poll , QuestionAdmin)
 admin.site.register(Choice,ChoiceAdmin)
-# admin.site.register(Vote)
+admin.site.register(Voted , VotedAdmin)
 
-# Register your models here.
