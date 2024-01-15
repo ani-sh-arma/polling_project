@@ -135,13 +135,20 @@
         }).then((result) => {
 
           if (result.isConfirmed) {
-            const pollID = button.dataset.pollId;
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+            .then(() => {
+              const pollID = button.dataset.pollId;
 
-            console.log(pollID);
+              console.log(pollID);
 
-            button.href = `/delete/${pollID}`;
-            button.click();
-            button.removeEventListener("click", swalDelete);
+              button.href = `/delete/${pollID}`;
+              button.click();
+              button.removeEventListener("click", swalDelete);
+
+            })
+
+
+
           }
         });
       }
