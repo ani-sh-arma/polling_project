@@ -81,10 +81,10 @@
   <div class="card-body pollContent" style="min-width: 400px; overflow: wrap">
     <h5 class="card-title">{{poll.question}}</h5>
 
-    <a id="deleteButton" class="btn btn-danger" style="float: right" 
+    <a id="deleteButton" data-poll-id="{{ poll.id }}" class="btn btn-danger deleteButton" style="float: right" 
     >Delete</a
     >
-    <input type="hidden" name="" id="pollId" value="{{poll.id}}">
+    
     <a href="/update/{{poll.id}}" class="btn btn-primary" style="float: right"
       >Update</a
     >
@@ -115,37 +115,37 @@
 
   <script>
   
-  document.getElementById("deleteButton").addEventListener("click", swalDelete );
-  
-  function swalDelete(){
-  
-  
-    Swal.fire('Hello, World!');
-  
-    // Confirm dialog
-    Swal.fire({
-    title: 'Are you sure?',
-    text: 'This action cannot be undone!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-    if (result.isConfirmed) {
-        // Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
-        
-        const pollID = document.getElementById("pollId").value;
-  
-        console.log(pollID);
-  
-        document.querySelector("#deleteButton").href= `/delete/${pollID}`;
-        document.querySelector("#deleteButton").click();
-        document.querySelector("#deleteButton").removeEventListener("click", swalDelete );
-  
-    }
-    });
-  };
+      document.querySelectorAll(".deleteButton").forEach((button) => {
+
+      button.addEventListener("click", swalDelete);
+
+      function swalDelete() {
+
+        Swal.fire('Hello, World!');
+
+        // Confirm dialog
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'This action cannot be undone!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+
+          if (result.isConfirmed) {
+            const pollID = button.dataset.pollId;
+
+            console.log(pollID);
+
+            button.href = `/delete/${pollID}`;
+            button.click();
+            button.removeEventListener("click", swalDelete);
+          }
+        });
+      }
+      });  
   
   </script>
 
