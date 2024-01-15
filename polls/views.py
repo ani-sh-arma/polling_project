@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, HttpResponse , get_object_or_404
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.contrib.auth import logout
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db import IntegrityError
 
 from .models import Poll , Choice , Voted
-from django.db.models import F
 from .forms import addPoll
 
 user = User.objects.all()
@@ -17,15 +17,6 @@ def index(request):
     poll = Poll.objects.all()
     choice = Choice.objects.all()
     voted = Voted.objects.all()
-
-
-    # voted_choice = []
-
-    # for user in voted.user:
-    #     if request.user == user:
-    #         if voted.voted == True:
-    #             voted_choice.append(voted.choice)
-
 
     if request.user.is_anonymous:
         return redirect("/login")
@@ -43,10 +34,11 @@ def index(request):
 
 
 
-# Home view by class , We can use ListView and DetailView by doing this
-# class Home(ListView):
-#     model = Poll
-#     template_name = "index.html"
+
+def custom_logout(request):
+
+    logout(request)
+    return redirect('login')
 
 
 

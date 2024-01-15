@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-qzi5%zq=uh6-0n77)%bletjz6uwro*g0o&97+gcw$w%38y2q%8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'polls',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'polls',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APPEND_SLASH = True
 
 
-LOGIN_REDIRECT_URL = '/' 
+LOGIN_REDIRECT_URL = '/'
 
 # Set session expiration to a desired time (in seconds)
 SESSION_COOKIE_AGE = 604800   # a week in seconds
