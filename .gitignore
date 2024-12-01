@@ -1,3 +1,11 @@
 db.sqlite3
 
 __pycache__
+
+venv
+
+.vscode/*
+
+migrations/*
+
+.env
