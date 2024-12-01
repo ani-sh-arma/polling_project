@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block style %}
 <style>
-    * {
-        margin: 0;
+  * {
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
     text-decoration: none;
@@ -49,51 +49,63 @@
   .options:hover {
     background-color: cyan;
   }
-    .err{
+  .err {
     color: red;
     font-size: 20px;
-    }
-
+  }
 </style>
-{% endblock style %} 
+{% endblock style %} {% block serach_bar %}
+<div style="position: relative; width: 400px">
+  <form action="">
+    <!-- <label for="search" class="form-label">Search</label> -->
+    <input
+      type="text"
+      id="search"
+      name="search"
+      class="form-control"
+      placeholder="Search"
+    />
 
-{% block serach_bar %}
-<div style="position:relative; width:400px;">
-    <form action="">
-      <!-- <label for="search" class="form-label">Search</label> -->
-      <input
-        type="text"
-        id="search"
-        name="search"
-        class="form-control"
-        placeholder="Search"
-      />
-  
-      <button type="submit" class="btn btn-primary" style="position: absolute; top:0;right:0;">
-        Submit
-      </button>
-    </form>
-  </div>
-{% endblock serach_bar %}
-
-
-{% block body %}
+    <button
+      type="submit"
+      class="btn btn-primary"
+      style="position: absolute; top: 0; right: 0"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+{% endblock serach_bar %} {% block body %}
 <section>
-    <div class="wrapper">
-        
-        
+  <div class="wrapper">
     {% for poll in polls %}
-    <div class="card-body pollContent poll" style="min-width: 400px; overflow: wrap">
-      <div id="errorBox_{{ poll.id }}" class = "err"> </div>
+    <div
+      class="card-body pollContent poll"
+      style="min-width: 400px; overflow: wrap"
+    >
+      <div id="errorBox_{{ poll.id }}" class="err"></div>
       <h5 class="card-title">{{poll.question}}</h5>
       <weak>
         Created by: {{poll.creator}}
-        <div>Date: {{poll.pub_date}}</div>
-      </weak><br /><br />
+        <div>Date: {{poll.pub_date}}</div> </weak
+      ><br /><br />
       {% for choice in poll.choice_set.all %}
-      <a href="/vote/{{choice.id}}" style="text-decoration: none;" class="vote-link" data-poll-id="{{ poll.id }}">
-        <div name="answer1" class="options vote-button" data-choice-id="{{ choice.id }}" style="text-decoration: none;">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}} <p style="float:right; padding-right:20px;" id = "vote_count">{{choice.votes}}</p>
+      <a
+        href="/vote/{{choice.id}}"
+        style="text-decoration: none"
+        class="vote-link"
+        data-poll-id="{{ poll.id }}"
+      >
+        <div
+          name="answer1"
+          class="options vote-button"
+          data-choice-id="{{ choice.id }}"
+          style="text-decoration: none"
+        >
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}}
+          <p style="float: right; padding-right: 20px" id="vote_count">
+            {{choice.votes}}
+          </p>
         </div>
       </a>
       {% endfor %}
@@ -101,77 +113,68 @@
     {% endfor %}
   </div>
 
+  <!-- Add this to your HTML template -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-
-<!-- Add this to your HTML template -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<script>
-
+  <script>
     // Function to retrieve a cookie by name
-function getCookie(name) {
-  var cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].trim();
-      // Check if this cookie name is the one we are looking for
-      if (cookie.substring(0, name.length + 1) === name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Check if this cookie name is the one we are looking for
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
       }
+      return cookieValue;
     }
-  }
-  return cookieValue;
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", () => {
+      $(document).ready(function () {
         $(".vote-link").on("click", function (event) {
-            event.preventDefault();
-            var pollId = $(this).data("poll-id");
-            var choiceId = $(this).find(".options").data("choice-id");
+          event.preventDefault();
+          var pollId = $(this).data("poll-id");
+          var choiceId = $(this).find(".options").data("choice-id");
 
-            // Save a reference to the clicked element
-            var clickedOption = $(this).find(".options");
-            
-            // Send an AJAX request to the server to record the vote
-            $.ajax({
-                type: "POST",
-                url: `/vote/${choiceId}/`,
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken"),
-                },
-                success: function (data) {
-                    if (data.error) {
-                        //alert(data.error);
-                        $(`#errorBox_${pollId}`).text(data.error);
-                        
-                        setTimeout(()=>{
-                            $(`#errorBox_${pollId}`).text("");
+          // Save a reference to the clicked element
+          var clickedOption = $(this).find(".options");
 
-                        } , 10000)
+          // Send an AJAX request to the server to record the vote
+          $.ajax({
+            type: "POST",
+            url: `/vote/${choiceId}/`,
+            headers: {
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            success: function (data) {
+              if (data.error) {
+                //alert(data.error);
+                $(`#errorBox_${pollId}`).text(data.error);
 
-                    } else {
-                        // Add a class to the clicked element
-                        clickedOption.addClass("voted-option");
+                setTimeout(() => {
+                  $(`#errorBox_${pollId}`).text("");
+                }, 10000);
+              } else {
+                // Add a class to the clicked element
+                clickedOption.addClass("voted-option");
 
-                        // Update the content and background color
-                        clickedOption.find("p").text(data.votes);
-                        clickedOption.css("background-color", "grey");
-                    }
-                },
-                error: function (error) {
-                    console.error("Error:", error);
-                },
-            });
+                // Update the content and background color
+                clickedOption.find("p").text(data.votes);
+                clickedOption.css("background-color", "grey");
+              }
+            },
+            error: function (error) {
+              console.error("Error:", error);
+            },
+          });
         });
+      });
     });
-});
-
-</script>
-  
-
-
+  </script>
 </section>
 {% endblock body %}

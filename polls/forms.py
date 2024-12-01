@@ -1,5 +1,6 @@
 from django import forms
-from .models import Poll,Choice
+from .models import Poll
+
 
 class addPoll(forms.ModelForm):
     options = forms.CharField(
@@ -10,4 +11,4 @@ class addPoll(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ['question']
+        fields = ["question"]

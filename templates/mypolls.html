@@ -49,7 +49,7 @@
   }
 </style>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10" />
 
 {% endblock style %} {% block serach_bar %}
 <div style="position: relative; width: 400px">
@@ -75,16 +75,19 @@
 {% endblock serach_bar %} {% block body %}
 
 <div class="wrapper">
-  {% for poll in polls %}
-   {% if poll.creator.username == user.username %}
-   {% if polls %}
+  {% for poll in polls %} {% if poll.creator.username == user.username %} {% if
+  polls %}
   <div class="card-body pollContent" style="min-width: 400px; overflow: wrap">
     <h5 class="card-title">{{poll.question}}</h5>
 
-    <a id="deleteButton" data-poll-id="{{ poll.id }}" class="btn btn-danger deleteButton" style="float: right" 
-    >Delete</a
+    <a
+      id="deleteButton"
+      data-poll-id="{{ poll.id }}"
+      class="btn btn-danger deleteButton"
+      style="float: right"
+      >Delete</a
     >
-    
+
     <a href="/update/{{poll.id}}" class="btn btn-primary" style="float: right"
       >Update</a
     >
@@ -97,46 +100,37 @@
     <div class="options vote-button">
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}}
     </div>
-    {% endfor %} 
-
+    {% endfor %}
   </div>
   {% else %}
   <h1 style="text-align: center">Login to see your polls.</h1>
-  {% endif %}
-
-
-  
-  {% endif %}
-
-  {% endfor %}
-
+  {% endif %} {% endif %} {% endfor %}
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
   <script>
-  
-      document.querySelectorAll(".deleteButton").forEach((button) => {
-
+    document.querySelectorAll(".deleteButton").forEach((button) => {
       button.addEventListener("click", swalDelete);
 
       function swalDelete() {
-
-        Swal.fire('Hello, World!');
+        Swal.fire("Hello, World!");
 
         // Confirm dialog
         Swal.fire({
-          title: 'Are you sure?',
-          text: 'This action cannot be undone!',
-          icon: 'warning',
+          title: "Are you sure?",
+          text: "This action cannot be undone!",
+          icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
         }).then((result) => {
-
           if (result.isConfirmed) {
-            Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
-            .then(() => {
+            Swal.fire(
+              "Deleted!",
+              "Your file has been deleted.",
+              "success"
+            ).then(() => {
               const pollID = button.dataset.pollId;
 
               console.log(pollID);
@@ -144,18 +138,12 @@
               button.href = `/delete/${pollID}`;
               button.click();
               button.removeEventListener("click", swalDelete);
-
-            })
-
-
-
+            });
           }
         });
       }
-      });  
-  
+    });
   </script>
-
 </div>
 
 {% endblock body %}

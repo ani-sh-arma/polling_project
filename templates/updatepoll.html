@@ -1,95 +1,79 @@
-{% extends 'base.html' %}
-
-{% block style %}
+{% extends 'base.html' %} {% block style %}
 <style>
-    .addpoll{
+  .addpoll {
     height: 100%;
     min-width: 100%;
     display: grid;
     place-items: center;
-    }
-    h1{
-        padding: 20px;
-    }
-    #btn{
-        height:40px;
-        width:80px;
-        background-color:black;
-        color:white;
-        border-radius:.5rem;
-        float:right;
-    }
-    .btnBack{
-        height:40px;
-        width:80px;
-        background-color:black;
-        color:white;
-        border-radius:.5rem;
-        float: left;
-    }
-    #btn:hover,.btnBack:hover{
-        background:grey;
-        color: black;
-        font-weight: bold;
-    }
+  }
+  h1 {
+    padding: 20px;
+  }
+  #btn {
+    height: 40px;
+    width: 80px;
+    background-color: black;
+    color: white;
+    border-radius: 0.5rem;
+    float: right;
+  }
+  .btnBack {
+    height: 40px;
+    width: 80px;
+    background-color: black;
+    color: white;
+    border-radius: 0.5rem;
+    float: left;
+  }
+  #btn:hover,
+  .btnBack:hover {
+    background: grey;
+    color: black;
+    font-weight: bold;
+  }
 
-    form p {
-        margin: 10px 0; /* Add some spacing between form fields */
-        font-size: 16px;
-        line-height: 1.5;
-        color: #333;
-    }
+  form p {
+    margin: 10px 0; /* Add some spacing between form fields */
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+  }
 
-    form label {
-        font-weight: bold;
-    }
+  form label {
+    font-weight: bold;
+  }
 
-    form input[type="text"] {
-        width: 100%;
-        padding: 8px;
-        border: 2px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
+  form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
 
-    form button[type="submit"] {
-        background-color: #007bff;
-        color: white;
-        padding:5px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
+  form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 </style>
-{% endblock style %}
-{% block body %}
+{% endblock style %} {% block body %}
 <div class="addpoll">
-    <h1>Update Poll</h1>
-    {% if context %}
-    <p>
-        {{context}}
-    </p>
-    {% endif %}
-    <form method="POST">
-        {% csrf_token %}
+  <h1>Update Poll</h1>
+  {% if context %}
+  <p>{{context}}</p>
+  {% endif %}
+  <form method="POST">
+    {% csrf_token %} {% comment %} {% for fields in form %} {{ fields.label_tag
+    }}<br />
+    {{fields.questions}} {% endfor %} {% endcomment %} {{form.as_p}}
 
-        {% comment %} {% for fields in form %}
-        
-        {{ fields.label_tag }}<br>
-        {{fields.questions}}
-        
-        {% endfor %} {% endcomment %}
-
-        {{form.as_p}}
-
-        <br>
-        <button class="btnBack" id="">
-            back
-        </button>
-        <button type="submit" id="btn">
-            submit
-        </button>
-    </form>
+    <br />
+    <button class="btnBack" id="">back</button>
+    <button type="submit" id="btn">submit</button>
+  </form>
 </div>
 {% endblock body %}

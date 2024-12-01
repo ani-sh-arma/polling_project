@@ -6,6 +6,7 @@ venv
 
 .vscode/*
 
-migrations/*
+migrations/
+migrations
 
 .env

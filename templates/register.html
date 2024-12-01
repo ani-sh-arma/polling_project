@@ -12,7 +12,7 @@
       crossorigin="anonymous"
     />
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css" />
 
     <style>
       body {
@@ -30,17 +30,27 @@
       .container {
         height: 60vh;
         max-width: 30vw;
-        width:100%;
+        width: 100%;
         min-width: 400px;
       }
-
     </style>
   </head>
   <body data-bs-theme="dark" class="body">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="position:absolute;top:0px;width:100%;">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark"
+      style="position: absolute; top: 0px; width: 100%"
+    >
       <div class="container-fluid">
         <a class="navbar-brand" href="/">EasyPolls</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -55,13 +65,13 @@
               <a class="nav-link" href="/login">Login</a>
             </li>
           </ul>
-          <div class="" style="margin-right: 50px; color: white;">
-              <h5>{{request.user}}</h5>
+          <div class="" style="margin-right: 50px; color: white">
+            <h5>{{request.user}}</h5>
           </div>
           <div class="logout">
-              <h5>
-                  <a href="/login">Logout</a>
-              </h5>
+            <h5>
+              <a href="/login">Logout</a>
+            </h5>
           </div>
         </div>
       </div>
@@ -71,9 +81,7 @@
 
       <form method="POST" action="/register/">
         {% csrf_token %}
-        <div class="">
-
-        </div>
+        <div class=""></div>
         <div class="mb-3" style="display: flex; gap: 10px">
           <input
             type="text"
@@ -97,7 +105,6 @@
           />
         </div>
         <div class="mb-3">
-
           <input
             type="text"
             class="form-control"
@@ -109,7 +116,6 @@
           />
         </div>
         <div class="mb-3">
-
           <input
             type="email"
             class="form-control"
@@ -121,7 +127,6 @@
           />
         </div>
         <div class="mb-3">
-          
           <input
             type="password"
             class="form-control"
@@ -155,12 +160,11 @@
 
     {% if error_message %}
     <div class="errorDialogue">
-      <div id="closeError" class="closeError">X</div><br>
+      <div id="closeError" class="closeError">X</div>
+      <br />
       {{error_message}}
     </div>
     {% endif %}
-
-
 
     <script src="/static/script.js"></script>
     <script
