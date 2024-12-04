@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite3
+.env
+venv/
+node_modules/
+
+.vscode/*
+
+migrations/
+migrations
+
+Dockerfile
