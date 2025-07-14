@@ -1,114 +1,112 @@
 {% extends 'base.html' %} {% block style %}
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-  }
   .parent {
     height: fit-content;
-    width: 98vw;
-    display: grid;
-    place-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
   }
   .wrapper {
-    padding-top: 20px;
-    width: 80vw;
     display: grid;
-    gap: 60px;
-    padding-left: 50px;
-    grid-template-columns: 1fr 1fr;
-    /* grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); */
-  }
-  weak {
-    font-size: 14px;
-    color: grey;
-  }
-  weak div {
-    float: right;
-    padding-right: 20px;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    width: 90%;
+    max-width: 1200px;
   }
   .pollContent {
-    min-width: 300px;
-    width: 500px;
-    border: 1px solid grey;
-    border-radius: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
   }
-
+  .pollContent:hover {
+    transform: translateY(-5px);
+  }
+  .pollContent .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  .pollContent weak {
+    font-size: 0.85rem;
+    color: #6c757d;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
   .options {
-    height: 40px;
-    padding: 5px 0px;
-    border: 1px solid black;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    color: black;
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border: 1px solid #007bff;
+    border-radius: 0.5rem;
+    color: #007bff;
     text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-
   .options:hover {
-    background-color: cyan;
+    background-color: #007bff;
+    color: white;
+  }
+  .options p {
+    margin: 0;
+    font-weight: bold;
   }
   .err {
-    color: red;
-    font-size: 20px;
+    color: #dc3545;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
   }
 </style>
 {% endblock style %} {% block serach_bar %}
-<div style="position: relative; width: 400px">
-  <form action="">
-    <!-- <label for="search" class="form-label">Search</label> -->
+<div class="d-flex justify-content-center my-3">
+  <form action="" class="d-flex" style="width: 100%; max-width: 500px;">
     <input
       type="text"
       id="search"
       name="search"
-      class="form-control"
-      placeholder="Search"
+      class="form-control me-2"
+      placeholder="Search polls..."
+      aria-label="Search"
     />
-
-    <button
-      type="submit"
-      class="btn btn-primary"
-      style="position: absolute; top: 0; right: 0"
-    >
-      Submit
-    </button>
+    <button type="submit" class="btn btn-outline-primary">Search</button>
   </form>
 </div>
 {% endblock serach_bar %} {% block body %}
-<section>
+<section class="container-fluid">
   <div class="wrapper">
     {% for poll in polls %}
-    <div
-      class="card-body pollContent poll"
-      style="min-width: 400px; overflow: wrap"
-    >
+    <div class="card pollContent poll p-3">
       <div id="errorBox_{{ poll.id }}" class="err"></div>
       <h5 class="card-title">{{poll.question}}</h5>
       <weak>
-        Created by: {{poll.creator}}
-        <div>Date: {{poll.pub_date}}</div> </weak
-      ><br /><br />
-      {% for choice in poll.choice_set.all %}
-      <a
-        href="/vote/{{choice.id}}"
-        style="text-decoration: none"
-        class="vote-link"
-        data-poll-id="{{ poll.id }}"
-      >
-        <div
-          name="answer1"
-          class="options vote-button"
-          data-choice-id="{{ choice.id }}"
-          style="text-decoration: none"
+        <span>Created by: {{poll.creator}}</span>
+        <span>Date: {{poll.pub_date}}</span>
+      </weak>
+      <div class="mt-3">
+        {% for choice in poll.choice_set.all %}
+        <a
+          href="/vote/{{choice.id}}"
+          class="vote-link"
+          data-poll-id="{{ poll.id }}"
         >
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}}
-          <p style="float: right; padding-right: 20px" id="vote_count">
-            {{choice.votes}}
-          </p>
-        </div>
-      </a>
-      {% endfor %}
+          <div
+            name="answer1"
+            class="options vote-button"
+            data-choice-id="{{ choice.id }}"
+          >
+            <span>{{choice.option_text}}</span>
+            <p id="vote_count">{{choice.votes}}</p>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
     </div>
     {% endfor %}
   </div>
