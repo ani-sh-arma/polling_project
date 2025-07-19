@@ -310,7 +310,7 @@
     </nav>
 
     <!-- Messages -->
-    {% comment %} {% if messages %}
+    {% if messages %}
     <div class="container mt-3">
       {% for message in messages %}
       <div
@@ -326,7 +326,7 @@
       </div>
       {% endfor %}
     </div>
-    {% endif %} {% endcomment %}
+    {% endif %}
 
     <!-- Main Content -->
     <main class="main-content">{% block body %}{% endblock body %}</main>

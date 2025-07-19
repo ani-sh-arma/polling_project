@@ -192,23 +192,78 @@ def delete(request, id):
     return redirect("mypolls")
 
 
+@login_required(login_url="login")
 def update(request, id):
+    poll = get_object_or_404(Poll, id=id)
 
-    queryset = Poll.objects.get(id=id)
+    # Check if the user is the creator of the poll
+    if poll.creator != request.user:
+        return redirect("mypolls")
+
+    # Get existing choices
+    existing_choices = poll.choice_set.all()
+    existing_options = ", ".join([choice.option_text for choice in existing_choices])
 
     if request.method == "POST":
-        form = addPoll(request.POST)
-        if form.is_valid():
+        question = request.POST.get("question", "").strip()
+        options = request.POST.get("options", "").strip()
 
-            # form.question = request.POST.get("question")
-            poll = form.save(commit=False)
-            poll.creator = request.user
-            poll.save()
-            return redirect("mypolls")
-    else:
-        form = addPoll()
+        if not question:
+            return render(
+                request,
+                "updatepoll.html",
+                {
+                    "poll": poll,
+                    "existing_options": existing_options,
+                    "error_message": "Please provide a question for your poll.",
+                },
+            )
 
-    return render(request, "updatepoll.html", {"form": form})
+        if not options:
+            return render(
+                request,
+                "updatepoll.html",
+                {
+                    "poll": poll,
+                    "existing_options": existing_options,
+                    "error_message": "Please provide at least 2 options for your poll.",
+                },
+            )
+
+        # Parse and validate options
+        options_list = [
+            option.strip() for option in options.split(",") if option.strip()
+        ]
+
+        if len(options_list) < 2:
+            return render(
+                request,
+                "updatepoll.html",
+                {
+                    "poll": poll,
+                    "existing_options": existing_options,
+                    "error_message": "Please provide at least 2 options for your poll.",
+                },
+            )
+
+        # Update the poll question
+        poll.question = question
+        poll.save()
+
+        # Delete existing choices and create new ones
+        poll.choice_set.all().delete()
+        for option_text in options_list:
+            if option_text:  # Only create non-empty options
+                Choice.objects.create(question=poll, option_text=option_text)
+
+        return redirect("mypolls")
+
+    context = {
+        "poll": poll,
+        "existing_options": existing_options,
+    }
+
+    return render(request, "updatepoll.html", context)
 
 
 @require_POST
