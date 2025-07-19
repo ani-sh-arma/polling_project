@@ -1,152 +1,541 @@
-{% extends 'base.html' %} {% block style %}
+{% extends 'base.html' %} {% block title %} My Polls - PollCraft {% endblock title %} {% block style %}
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  /* Page Header */
+  .page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a8a 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
   }
-  .parent {
-    height: fit-content;
-    width: 98vw;
+
+  .page-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .page-header-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+
+  /* Stats Cards */
+  .stats-section {
+    margin-bottom: 3rem;
+  }
+
+  .stats-grid {
     display: grid;
-    place-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
   }
-  .wrapper {
-    padding-top: 20px;
-    margin-bottom: 50px;
-    width: 80vw;
+
+  .stat-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+  }
+
+  .stat-icon.polls {
+    background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
+  }
+
+  .stat-icon.votes {
+    background: linear-gradient(135deg, var(--secondary-color), #059669);
+  }
+
+  .stat-icon.recent {
+    background: linear-gradient(135deg, var(--accent-color), #7c3aed);
+  }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Search Section */
+  .search-section {
+    margin-bottom: 3rem;
+  }
+
+  .search-container {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 2rem;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    background: white;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1), var(--shadow-md);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+  }
+
+  /* Polls Grid */
+  .polls-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .polls-grid {
     display: grid;
-    gap: 60px;
-    padding-left: 50px;
-    grid-template-columns: 1fr 1fr;
-    /* grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); */
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
   }
-  weak {
-    font-size: 14px;
-    color: grey;
+
+  /* My Poll Cards */
+  .my-poll-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    overflow: hidden;
+    position: relative;
   }
-  weak div {
-    float: right;
-    padding-right: 20px;
+
+  .my-poll-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
   }
-  .pollContent {
-    min-width: 300px;
-    width: 500px;
-    border: 1px solid grey;
+
+  .my-poll-card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(
+      135deg,
+      rgba(30, 64, 175, 0.05),
+      rgba(16, 185, 129, 0.05)
+    );
+    position: relative;
+  }
+
+  .poll-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
     border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  .options {
-    height: 40px;
-    padding: 5px 0px;
-    border: 1px solid black;
-    margin-bottom: 5px;
-    border-radius: 5px;
+  .poll-status.active {
+    background: linear-gradient(135deg, var(--secondary-color), #059669);
+    color: white;
+  }
+  .my-poll-question {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    padding-right: 5rem;
   }
 
-  .options:hover {
-    background-color: grey;
+  .my-poll-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .poll-date {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .total-votes {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+  }
+
+  .my-poll-card-body {
+    padding: 1.5rem;
+  }
+
+  .poll-options-preview {
+    margin-bottom: 1.5rem;
+  }
+
+  .option-preview {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .option-text {
+    color: var(--text-primary);
+  }
+
+  .option-votes {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .poll-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  .btn-edit {
+    background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-edit:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: white;
+  }
+
+  .btn-delete {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+
+  .btn-delete:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2.5rem;
+    }
+
+    .polls-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .my-poll-card-header,
+    .my-poll-card-body {
+      padding: 1rem;
+    }
+
+    .page-header {
+      padding: 0rem 0;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
   }
 </style>
+{% endblock style %} {% block body %}
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <div class="page-header-content">
+      <h1 class="page-title">My Polls</h1>
+      <p class="page-subtitle">Manage and track your created polls</p>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10" />
-
-{% endblock style %} {% block serach_bar %}
-<div style="position: relative; width: 400px">
-  <form action="">
-    <!-- <label for="search" class="form-label">Search</label> -->
-    <input
-      type="text"
-      id="search"
-      name="search"
-      class="form-control"
-      placeholder="Search"
-    />
-
-    <button
-      type="submit"
-      class="btn btn-primary"
-      style="position: absolute; top: 0; right: 0"
-    >
-      Submit
-    </button>
-  </form>
-</div>
-{% endblock serach_bar %} {% block body %}
-
-<div class="wrapper">
-  {% for poll in polls %}
-    {% if poll.creator.username == user.username %}
-      <div class="card-body pollContent" style="min-width: 400px; overflow: wrap">
-        <h5 class="card-title">{{poll.question}}</h5>
-
-        <a
-          id="deleteButton"
-          data-poll-id="{{ poll.id }}"
-          class="btn btn-danger deleteButton"
-          style="float: right"
-          >Delete</a
-        >
-
-        <a href="/update/{{poll.id}}" class="btn btn-primary" style="float: right"
-          >Update</a
-        >
-
-        <weak>
-          Created by : {{poll.creator}}
-          <div>Date : {{poll.date}}</div> </weak
-        ><br /><br />
-        {% for choice in poll.choice_set.all %}
-        <div class="options vote-button">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{choice.option_text}}
-        </div>
-        {% endfor %}
+      <div class="mt-4">
+        <a href="/addpoll" class="btn-modern-primary">
+          <i class="fas fa-plus"></i>
+          Create New Poll
+        </a>
       </div>
-    {% endif %}
-  {% endfor %}
+    </div>
+  </div>
+</section>
 
-  {% if not polls %}
-    <h1 style="text-align: center">Login to see your polls.</h1>
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon polls">
+          <i class="fas fa-poll"></i>
+        </div>
+        <div class="stat-number">{{ user_polls_count|default:"0" }}</div>
+        <div class="stat-label">Total Polls</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon votes">
+          <i class="fas fa-vote-yea"></i>
+        </div>
+        <div class="stat-number">{{ total_votes|default:"0" }}</div>
+        <div class="stat-label">Total Votes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon recent">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-number">{{ recent_polls|default:"0" }}</div>
+        <div class="stat-label">This Week</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input
+        type="text"
+        class="search-input"
+        id="search-input"
+        placeholder="Search your polls..."
+        value="{{ request.GET.search|default:'' }}"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- Polls Section -->
+<section class="polls-container">
+  {% if polls %}
+  <div class="polls-grid">
+    {% for poll in polls %}
+    <div
+      class="my-poll-card fade-in"
+      style="animation-delay: {{ forloop.counter0|floatformat:1 }}s"
+    >
+      <div class="my-poll-card-header">
+        <div class="poll-status active">Active</div>
+        <h3 class="my-poll-question">{{ poll.question }}</h3>
+        <div class="my-poll-meta">
+          <div class="poll-date">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ poll.pub_date|date:"M d, Y" }}</span>
+          </div>
+          <div class="total-votes">
+            <i class="fas fa-vote-yea"></i>
+            <span>
+              {{ poll.choice_set.all|length }} option {{
+              poll.choice_set.all|length|pluralize }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-poll-card-body">
+        <div class="poll-options-preview">
+          {% for choice in poll.choice_set.all %}
+          <div class="option-preview">
+            <span class="option-text">{{ choice.option_text }}</span>
+            <span class="option-votes"
+              >{{ choice.votes }} vote{{ choice.votes|pluralize }}</span
+            >
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="poll-actions">
+          <a href="/update/{{ poll.id }}" class="btn-edit">
+            <i class="fas fa-edit"></i>
+            Edit
+          </a>
+          <button
+            class="btn-delete delete-btn"
+            data-poll-id="{{ poll.id }}"
+            data-poll-title="{{ poll.question }}"
+          >
+            <i class="fas fa-trash"></i>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-poll-h"></i>
+    <h3>No polls created yet</h3>
+    <p>Create your first poll to get started with PollCraft!</p>
+    <a href="/addpoll" class="btn-modern-primary mt-3">
+      <i class="fas fa-plus"></i>
+      Create First Poll
+    </a>
+  </div>
   {% endif %}
+</section>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+{% endblock body %} {% block scripts %}
+<script>
+  // Enhanced search functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search-input");
+    let searchTimeout;
 
-  <script>
-    document.querySelectorAll(".deleteButton").forEach((button) => {
-      button.addEventListener("click", swalDelete);
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
 
-      function swalDelete() {
-        Swal.fire("Hello, World!");
+        searchTimeout = setTimeout(() => {
+          if (query.length >= 2 || query.length === 0) {
+            // Update URL with search parameter
+            const url = new URL(window.location);
+            if (query) {
+              url.searchParams.set("search", query);
+            } else {
+              url.searchParams.delete("search");
+            }
+            window.history.pushState({}, "", url);
 
-        // Confirm dialog
-        Swal.fire({
-          title: "Are you sure?",
-          text: "This action cannot be undone!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            Swal.fire(
-              "Deleted!",
-              "Your file has been deleted.",
-              "success"
-            ).then(() => {
-              const pollID = button.dataset.pollId;
-
-              console.log(pollID);
-
-              button.href = `/delete/${pollID}`;
-              button.click();
-              button.removeEventListener("click", swalDelete);
-            });
+            // Reload page with new search
+            window.location.reload();
           }
-        });
-      }
-    });
-  </script>
-</div>
+        }, 500);
+      });
+    }
 
-{% endblock body %}
+    // Enhanced delete functionality
+    document.querySelectorAll(".delete-btn").forEach((button) => {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const pollId = this.dataset.pollId;
+        const pollTitle = this.dataset.pollTitle;
+
+        if (
+          confirm(
+            `Are you sure you want to delete "${pollTitle}"?\n\nThis action cannot be undone.`
+          )
+        ) {
+          // Add loading state
+          this.innerHTML = '<span class="loading-spinner"></span> Deleting...';
+          this.style.pointerEvents = "none";
+
+          // Redirect to delete URL
+          window.location.href = `/delete/${pollId}/`;
+        }
+      });
+    });
+  });
+</script>
+{% endblock scripts %}

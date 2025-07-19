@@ -1,28 +1,489 @@
-{% extends 'base.html' %} {% block style %}
+{% extends 'base.html' %} {% block title %}About - PollCraft{% endblock title %}
+{% block style %}
 <style>
-  strong {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    place-items: center;
+  /* Hero Section */
+  .about-hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a8a 100%);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 4rem;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
   }
-  strong h1 {
-    color: black;
-    padding: 100px 0;
+
+  .about-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
   }
-  strong h5 {
-    min-width: 300px;
+
+  .about-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .about-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .about-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
     max-width: 600px;
-    text-align: justify;
+    margin: 0 auto;
+  }
+
+  /* Content Sections */
+  .about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .content-section {
+    margin-bottom: 4rem;
+  }
+
+  .section-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    padding: 3rem;
+    text-align: center;
+    transition: var(--transition);
+  }
+
+  .section-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .section-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 2rem;
+    color: white;
+  }
+
+  .section-icon.mission {
+    background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
+  }
+
+  .section-icon.features {
+    background: linear-gradient(135deg, var(--secondary-color), #059669);
+  }
+
+  .section-icon.community {
+    background: linear-gradient(135deg, var(--accent-color), #7c3aed);
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .section-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .feature-item {
+    background: var(--background-color);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    text-align: left;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+
+  .feature-item:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-text {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    background: linear-gradient(
+      135deg,
+      rgba(30, 64, 175, 0.05),
+      rgba(16, 185, 129, 0.05)
+    );
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    margin: 4rem 0;
+    text-align: center;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .stat-item {
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a8a 100%);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 4rem 3rem;
+    text-align: center;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-cta-primary {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-cta-primary:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    color: white;
+  }
+
+  .btn-cta-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-cta-secondary:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .about-title {
+      font-size: 2.5rem;
+    }
+
+    .section-card {
+      padding: 2rem;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 {% endblock style %} {% block body %}
-<strong>
-  <h1>This web app is created by Anish Sharma.</h1>
-  <h5>
-    The purpose of this web app is for people to learn about the best things
-    around the world and unbiasly vote for something that deserves to be well
-    known as a majority.
-  </h5>
-</strong>
+<!-- Hero Section -->
+<section class="about-hero">
+  <div class="container">
+    <div class="about-hero-content">
+      <h1 class="about-title">About PollCraft</h1>
+      <p class="about-subtitle">
+        Empowering communities to make informed decisions through engaging,
+        interactive polls and surveys.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="about-content">
+  <!-- Mission Section -->
+  <section class="content-section">
+    <div class="section-card">
+      <div class="section-icon mission">
+        <i class="fas fa-bullseye"></i>
+      </div>
+      <h2 class="section-title">Our Mission</h2>
+      <p class="section-text">
+        PollCraft was created to democratize decision-making and opinion
+        gathering. We believe that everyone's voice matters, and our platform
+        provides an intuitive, engaging way for communities, organizations, and
+        individuals to create polls, gather insights, and make data-driven
+        decisions. Whether you're conducting market research, organizing events,
+        or simply curious about public opinion, PollCraft makes it easy to
+        connect with your audience.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="content-section">
+    <div class="section-card">
+      <div class="section-icon features">
+        <i class="fas fa-rocket"></i>
+      </div>
+      <h2 class="section-title">Why Choose PollCraft?</h2>
+      <p class="section-text">
+        Built with modern web technologies and user experience in mind,
+        PollCraft offers a seamless polling experience for both creators and
+        participants.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="feature-title">Lightning Fast</h3>
+          <p class="feature-text">
+            Create and share polls in seconds with our intuitive interface and
+            real-time updates.
+          </p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3 class="feature-title">Mobile Responsive</h3>
+          <p class="feature-text">
+            Access and participate in polls seamlessly across all devices and
+            screen sizes.
+          </p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3 class="feature-title">Real-time Results</h3>
+          <p class="feature-text">
+            Watch results update instantly as votes come in, with beautiful
+            visual feedback.
+          </p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="feature-title">Secure & Private</h3>
+          <p class="feature-text">
+            Your data is protected with modern security practices and privacy
+            controls.
+          </p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 class="feature-title">Community Driven</h3>
+          <p class="feature-text">
+            Join a growing community of poll creators and participants from
+            around the world.
+          </p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3 class="feature-title">Easy to Use</h3>
+          <p class="feature-text">
+            No technical knowledge required - create professional polls with
+            just a few clicks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <h2 class="section-title">PollCraft by the Numbers</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">{{ total_polls|default:"0" }}</div>
+        <div class="stat-label">Polls Created</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">{{ total_votes|default:"0" }}</div>
+        <div class="stat-label">Votes Cast</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">{{ total_users|default:"0" }}</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Free to Use</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Section -->
+  <section class="content-section">
+    <div class="section-card">
+      <div class="section-icon community">
+        <i class="fas fa-heart"></i>
+      </div>
+      <h2 class="section-title">Built for Community</h2>
+      <p class="section-text">
+        PollCraft is more than just a polling platform - it's a tool for
+        building connections and understanding. From small team decisions to
+        large-scale public opinion surveys, we're here to help you gather the
+        insights you need to move forward with confidence. Join thousands of
+        users who trust PollCraft for their polling needs.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2 class="cta-title">Ready to Get Started?</h2>
+    <p class="cta-text">
+      Join the PollCraft community today and start creating engaging polls that
+      drive meaningful conversations and decisions.
+    </p>
+    <div class="cta-buttons">
+      {% if user.is_authenticated %}
+      <a href="/addpoll" class="btn-cta-primary">
+        <i class="fas fa-plus"></i>
+        Create Your First Poll
+      </a>
+      <a href="/mypolls" class="btn-cta-secondary">
+        <i class="fas fa-list"></i>
+        View My Polls
+      </a>
+      {% else %}
+      <a href="/register" class="btn-cta-primary">
+        <i class="fas fa-user-plus"></i>
+        Sign Up Free
+      </a>
+      <a href="/login" class="btn-cta-secondary">
+        <i class="fas fa-sign-in-alt"></i>
+        Sign In
+      </a>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
 {% endblock body %}

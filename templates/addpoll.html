@@ -1,77 +1,612 @@
-{% extends 'base.html' %} {% block style %}
+{% extends 'base.html' %} {% block title %}Create Poll - PollCraft{% endblock title %} {% block style %}
 <style>
-  .addpoll {
-    height: 100%;
-    min-width: 100%;
-    display: grid;
-    place-items: center;
-  }
-  h1 {
-    padding: 20px;
-  }
-  #btn {
-    height: 40px;
-    width: 80px;
-    background-color: black;
+  /* Page Header */
+  .page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a8a 100%);
     color: white;
-    border-radius: 0.5rem;
-    float: right;
-  }
-  .btnBack {
-    height: 40px;
-    width: 80px;
-    background-color: black;
-    color: white;
-    border-radius: 0.5rem;
-    float: left;
-  }
-  #btn:hover,
-  .btnBack:hover {
-    background: grey;
-    color: black;
-    font-weight: bold;
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
   }
 
-  form p {
-    margin: 10px 0; /* Add some spacing between form fields */
-    font-size: 16px;
-    line-height: 1.5;
-    color: #333;
+  .page-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
   }
 
-  form label {
-    font-weight: bold;
+  .page-header-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
   }
 
-  form input[type="text"] {
+  .page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+
+  /* Form Container */
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .poll-form {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+  }
+
+  .form-header {
+    background: linear-gradient(
+      135deg,
+      rgba(30, 64, 175, 0.05),
+      rgba(16, 185, 129, 0.05)
+    );
+    padding: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+  }
+
+  .form-header h2 {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-header p {
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .form-body {
+    padding: 2rem;
+  }
+
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+  }
+
+  .form-input {
     width: 100%;
-    padding: 8px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: var(--transition);
+    background: var(--surface-color);
+    font-family: inherit;
   }
 
-  form button[type="submit"] {
-    background-color: #007bff;
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+  }
+
+  .form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .form-help {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Options Section */
+  .options-section {
+    background: var(--background-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+  }
+
+  .options-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .options-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .option-item {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: var(--transition);
+  }
+
+  .option-item:hover {
+    border-color: var(--primary-color);
+  }
+
+  .option-number {
+    background: var(--primary-color);
     color: white;
-    padding: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .option-input {
+    flex: 1;
     border: none;
-    border-radius: 4px;
+    background: transparent;
+    font-size: 1rem;
+    padding: 0.25rem 0;
+    color: var(--text-primary);
+  }
+
+  .option-input:focus {
+    outline: none;
+  }
+
+  .option-remove {
+    background: #ef4444;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: var(--transition);
+    flex-shrink: 0;
+  }
+
+  .option-remove:hover {
+    background: #dc2626;
+  }
+
+  .add-option-btn {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .add-option-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+  }
+
+  /* Form Actions */
+  .form-actions {
+    background: var(--background-color);
+    padding: 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .btn-back {
+    background: var(--surface-color);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-back:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Preview Section */
+  .preview-section {
+    background: linear-gradient(
+      135deg,
+      rgba(30, 64, 175, 0.05),
+      rgba(16, 185, 129, 0.05)
+    );
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    margin-top: 2rem;
+  }
+
+  .preview-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .preview-poll {
+    background: var(--surface-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+  }
+
+  .preview-question {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .preview-option {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2.5rem;
+    }
+
+    .form-body,
+    .form-actions {
+      padding: 1.5rem;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .page-header {
+      padding: 2rem 0;
+    }
   }
 </style>
 {% endblock style %} {% block body %}
-<div class="addpoll">
-  <h1>Add a new poll</h1>
-  {% if context %}
-  <p>{{ context }}</p>
-  {% endif %}
-  <form method="POST">
-    {% csrf_token %} {{ form.as_p }}
-    <br />
-    <button class="btnBack" id="">back</button>
-    <button type="submit" id="btn">submit</button>
-  </form>
-</div>
+<!-- Page Header -->
+<section class="page-header">
+  <div class="container">
+    <div class="page-header-content">
+      <h1 class="page-title">Create New Poll</h1>
+      <p class="page-subtitle">Engage your audience with interactive polls</p>
+    </div>
+  </div>
+</section>
 
-{% endblock body %}
+<!-- Form Section -->
+<section class="form-container">
+  <div class="poll-form">
+    <div class="form-header">
+      <h2>Poll Details</h2>
+      <p>Create an engaging poll to gather opinions and insights</p>
+    </div>
+
+    <form method="POST" id="poll-form">
+      {% csrf_token %}
+
+      <div class="form-body">
+        <!-- Question Field -->
+        <div class="form-group">
+          <label for="id_question" class="form-label">
+            <i class="fas fa-question-circle"></i>
+            Poll Question
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            id="id_question"
+            name="question"
+            placeholder="What would you like to ask your audience?"
+            required
+            maxlength="255"
+          />
+          <div class="form-help">
+            <i class="fas fa-info-circle"></i>
+            Make your question clear and engaging to get better responses
+          </div>
+        </div>
+
+        <!-- Options Section -->
+        <div class="form-group">
+          <div class="options-section">
+            <div class="options-header">
+              <div class="options-title">
+                <i class="fas fa-list"></i>
+                Poll Options
+              </div>
+            </div>
+
+            <div id="options-container">
+              <div class="option-item">
+                <div class="option-number">1</div>
+                <input
+                  type="text"
+                  class="option-input"
+                  placeholder="Enter first option..."
+                  required
+                />
+              </div>
+              <div class="option-item">
+                <div class="option-number">2</div>
+                <input
+                  type="text"
+                  class="option-input"
+                  placeholder="Enter second option..."
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="button" class="add-option-btn" id="add-option">
+              <i class="fas fa-plus"></i>
+              Add Option
+            </button>
+
+            <div class="form-help mt-3">
+              <i class="fas fa-info-circle"></i>
+              Add at least 2 options. You can add up to 10 options for your
+              poll.
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden field for options -->
+        <input type="hidden" id="id_options" name="options" />
+
+        <!-- Preview Section -->
+        <div class="preview-section" id="preview-section" style="display: none">
+          <div class="preview-title">
+            <i class="fas fa-eye"></i>
+            Preview
+          </div>
+          <div class="preview-poll">
+            <div class="preview-question" id="preview-question">
+              Your question will appear here
+            </div>
+            <div id="preview-options"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="/" class="btn-back">
+          <i class="fas fa-arrow-left"></i>
+          Back to Home
+        </a>
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <i class="fas fa-plus"></i>
+          Create Poll
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% endblock body %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const optionsContainer = document.getElementById("options-container");
+    const addOptionBtn = document.getElementById("add-option");
+    const questionInput = document.getElementById("id_question");
+    const hiddenOptionsInput = document.getElementById("id_options");
+    const previewSection = document.getElementById("preview-section");
+    const previewQuestion = document.getElementById("preview-question");
+    const previewOptions = document.getElementById("preview-options");
+    const submitBtn = document.getElementById("submit-btn");
+
+    let optionCount = 2;
+    const maxOptions = 10;
+
+    // Add option functionality
+    addOptionBtn.addEventListener("click", function () {
+      if (optionCount < maxOptions) {
+        optionCount++;
+        const optionItem = document.createElement("div");
+        optionItem.className = "option-item";
+        optionItem.innerHTML = `
+          <div class="option-number">${optionCount}</div>
+          <input
+            type="text"
+            class="option-input"
+            placeholder="Enter option ${optionCount}..."
+            required
+          />
+          <button type="button" class="option-remove" onclick="removeOption(this)">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        optionsContainer.appendChild(optionItem);
+
+        if (optionCount >= maxOptions) {
+          addOptionBtn.style.display = "none";
+        }
+
+        updatePreview();
+      }
+    });
+
+    // Remove option functionality
+    window.removeOption = function (button) {
+      if (optionCount > 2) {
+        button.parentElement.remove();
+        optionCount--;
+        updateOptionNumbers();
+        addOptionBtn.style.display = "flex";
+        updatePreview();
+      }
+    };
+
+    // Update option numbers
+    function updateOptionNumbers() {
+      const optionItems = optionsContainer.querySelectorAll(".option-item");
+      optionItems.forEach((item, index) => {
+        item.querySelector(".option-number").textContent = index + 1;
+        item.querySelector(".option-input").placeholder = `Enter option ${
+          index + 1
+        }...`;
+      });
+    }
+
+    // Update preview
+    function updatePreview() {
+      const question = questionInput.value.trim();
+      const optionInputs = optionsContainer.querySelectorAll(".option-input");
+
+      if (question) {
+        previewQuestion.textContent = question;
+        previewSection.style.display = "block";
+      } else {
+        previewQuestion.textContent = "Your question will appear here";
+        previewSection.style.display = "none";
+      }
+
+      previewOptions.innerHTML = "";
+      optionInputs.forEach((input, index) => {
+        if (input.value.trim()) {
+          const optionDiv = document.createElement("div");
+          optionDiv.className = "preview-option";
+          optionDiv.textContent = input.value.trim();
+          previewOptions.appendChild(optionDiv);
+        }
+      });
+
+      // Update hidden field
+      const options = Array.from(optionInputs)
+        .map((input) => input.value.trim())
+        .filter((value) => value)
+        .join(", ");
+      hiddenOptionsInput.value = options;
+
+      // Update submit button state
+      const hasQuestion = question.length > 0;
+      const hasMinOptions =
+        Array.from(optionInputs).filter((input) => input.value.trim()).length >=
+        2;
+      submitBtn.disabled = !(hasQuestion && hasMinOptions);
+    }
+
+    // Event listeners for real-time preview
+    questionInput.addEventListener("input", updatePreview);
+
+    // Delegate event listener for option inputs
+    optionsContainer.addEventListener("input", function (e) {
+      if (e.target.classList.contains("option-input")) {
+        updatePreview();
+      }
+    });
+
+    // Form submission
+    document
+      .getElementById("poll-form")
+      .addEventListener("submit", function (e) {
+        const optionInputs = optionsContainer.querySelectorAll(".option-input");
+        const validOptions = Array.from(optionInputs)
+          .map((input) => input.value.trim())
+          .filter((value) => value);
+
+        if (validOptions.length < 2) {
+          e.preventDefault();
+          alert("Please provide at least 2 options for your poll.");
+          return;
+        }
+
+        // Update submit button
+        submitBtn.innerHTML =
+          '<span class="loading-spinner"></span> Creating Poll...';
+        submitBtn.disabled = true;
+      });
+
+    // Initial preview update
+    updatePreview();
+  });
+</script>
+{% endblock scripts %}
