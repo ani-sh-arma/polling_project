@@ -27,9 +27,7 @@ SECRET_KEY = "django-insecure-qzi5%zq=uh6-0n77)%bletjz6uwro*g0o&97+gcw$w%38y2q%8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(
-    ","
-)
+ALLOWED_HOSTS = ["polling-project-hs5p.onrender.com"]
 
 
 # Application definition
