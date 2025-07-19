@@ -27,7 +27,14 @@ SECRET_KEY = "django-insecure-qzi5%zq=uh6-0n77)%bletjz6uwro*g0o&97+gcw$w%38y2q%8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["polling-project-hs5p.onrender.com"]
+ALLOWED_HOSTS = ["polling-project-hs5p.onrender.com", "127.0.0.1", "localhost"]
+
+# CSRF trusted origins for deployed app
+CSRF_TRUSTED_ORIGINS = [
+    "https://polling-project-hs5p.onrender.com",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+]
 
 
 # Application definition
@@ -129,8 +136,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
